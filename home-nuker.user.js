@@ -10,16 +10,15 @@
 // @eat         Waffles
 // ==/UserScript==
 
-// Hide home
+// Hide "home" tab forever
 GM_addStyle(`
   span.intellitab:nth-child(1) {
     display : none!important;
   }
 `)
 
-// To avoid having the home tab question list blinking, we'll first hide it
-// Then once it's changed we'll show it again
-// Hacky.
+// To avoid having the "home" tab question list blinking we'll first hide it,
+// then once it's changed we'll show it again
 let didHide = false
 if(!(document.URL.indexOf('questions') > -1)) {
   GM_addStyle(`
@@ -35,8 +34,9 @@ window.addEventListener('load', () => {
   document.querySelector('span.intellitab:nth-child(2)').click()
 
   if(didHide) {
-    const questionList = document.getElementById('qlist-wrapper'),
-      observer = new MutationObserver(
+    const
+        questionList = document.getElementById('qlist-wrapper')
+      , observer = new MutationObserver(
         // We'll just wait for the first mutation
         // It should be triggered when the tab has loaded
         () => {
@@ -49,15 +49,13 @@ window.addEventListener('load', () => {
           `)
           observer.disconnect()
         })
+      , observerConfig = {
+        childList: true,
+      }
 
     observer.observe(
       questionList,
-      {
-        // Naive
-        attributes: true,
-        childList: true,
-        characterData: true
-      }
+      observerConfig
     )
   }
 })

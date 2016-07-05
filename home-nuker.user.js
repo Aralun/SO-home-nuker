@@ -4,7 +4,7 @@
 // @description Removes home tab, shows first other tab by default
 // @include     *://stackoverflow.com/
 // @include     *://stackoverflow.com/questions/*
-// @version     1
+// @version     2
 // @grant       GM_addStyle
 // @run-at      document-start
 // @eat         Waffles

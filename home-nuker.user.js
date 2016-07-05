@@ -39,11 +39,7 @@ window.addEventListener('load', () => {
         // We're going to wait for the question list to change,
         // indicating that we switched tab
         , observer = new MutationObserver(
-          // We'll just wait for the first mutation
-          // It should be triggered when the tab has loaded
           () => {
-            // Add the default styles back.
-            // Won't have any effect if we didn't alter them before
             GM_addStyle(`
                 #qlist-wrapper, .pager.fl, .page-sizer {
                   display: inline;
@@ -52,13 +48,10 @@ window.addEventListener('load', () => {
             observer.disconnect()
           }
         )
-      , observerConfig = {
-        childList: true,
-      }
+        , observerConfig = {
+          childList: true,
+        }
 
-    observer.observe(
-      questionList,
-      observerConfig
-    )
+    observer.observe(questionList, observerConfig)
   }
 })

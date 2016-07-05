@@ -17,5 +17,47 @@ GM_addStyle(`
   }
 `)
 
+// To avoid having the home tab question list blinking, we'll first hide it
+// Then once it's changed we'll show it again
+// Hacky.
+let didHide = false
+if(!(document.URL.indexOf('questions') > -1)) {
+  GM_addStyle(`
+    #qlist-wrapper, .pager.fl, .page-sizer {
+      display: none;
+    }
+  `)
+  didHide = true
+}
+
 // Click on first next tab
-window.addEventListener('load', () => document.querySelector('span.intellitab:nth-child(2)').click())
+window.addEventListener('load', () => {
+  document.querySelector('span.intellitab:nth-child(2)').click()
+
+  if(didHide) {
+    const questionList = document.getElementById('qlist-wrapper'),
+      observer = new MutationObserver(
+        // We'll just wait for the first mutation
+        // It should be triggered when the tab has loaded
+        () => {
+          // Add the default styles back.
+          // Won't have any effect if we didn't alter them before
+          GM_addStyle(`
+              #qlist-wrapper, .pager.fl, .page-sizer {
+                display: inline;
+              }
+          `)
+          observer.disconnect()
+        })
+
+    observer.observe(
+      questionList,
+      {
+        // Naive
+        attributes: true,
+        childList: true,
+        characterData: true
+      }
+    )
+  }
+})

@@ -17,23 +17,19 @@ GM_addStyle(`
   }
 `)
 
-// To avoid having the "home" tab question list blinking we'll first hide it,
-// then once it's changed we'll show it again
-let didHide = false
+// Only do something if we're on the home tab
 if(!(document.URL.indexOf('questions') > -1)) {
+  // To avoid having the "home" tab question list blinking we'll first hide it,
+  // then once it's changed we'll show it again
   GM_addStyle(`
     #qlist-wrapper, .pager.fl, .page-sizer {
       display: none;
     }
   `)
-  didHide = true
-}
+  window.addEventListener('load', () => {
+    // Click on first next tab
+    document.querySelector('span.intellitab:nth-child(2)').click()
 
-// Click on first next tab
-window.addEventListener('load', () => {
-  document.querySelector('span.intellitab:nth-child(2)').click()
-
-  if(didHide) {
     const
         questionList = document.getElementById('qlist-wrapper')
         // We're going to wait for the question list to change,
@@ -53,5 +49,5 @@ window.addEventListener('load', () => {
         }
 
     observer.observe(questionList, observerConfig)
-  }
-})
+  })
+}
